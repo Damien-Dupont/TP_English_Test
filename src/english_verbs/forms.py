@@ -1,7 +1,7 @@
 from django import forms
 from .models import Player
 
-class SignInForm(forms.ModelForm):
+class SignUpForm(forms.ModelForm):
     class Meta:
         model = Player
         fields = ['email', 'lastname', 'firstname', 'password', 'town']
