@@ -1,0 +1,22 @@
+node_modules/
+npm-debug.log
+package-lock.json
+package.json
+virtualenv/
+
+# PyCharm
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# VS Code
+.vscode/
+
+# OS X
+.DS_Store
+
+# Windows
+Thumbs.db
+
+src/EnglishTest_old
