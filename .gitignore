@@ -20,3 +20,4 @@ virtualenv/
 Thumbs.db
 
 src/EnglishTest_old
+*.mht

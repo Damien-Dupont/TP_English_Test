@@ -3,21 +3,21 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.contrib import messages
-from .forms import SignInForm, ConjugaisonForm
+from .forms import SignUpForm, ConjugaisonForm
 from .models import Player, IrregularVerb
 
 # Create your views here.
-def sign_in(request):
+def sign_up(request):
     if request.method == 'POST':
-        form = SignInForm(request.POST)
+        form = SignUpForm(request.POST)
         if form.is_valid():
             player = form.save(commit=False)
             player.joined_date = timezone.now()
             player.save()
             return redirect('index')
     else:
-        form = SignInForm()
-    return render(request, 'english_verbs/signIn.html', {'form': form})
+        form = SignUpForm()
+    return render(request, 'english_verbs/signUp.html', {'form': form})
 
 def log_in(request):
     if request.method == 'POST':
