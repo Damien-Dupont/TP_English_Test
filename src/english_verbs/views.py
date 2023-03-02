@@ -3,8 +3,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.contrib import messages
+from django.contrib.auth.signals import user_logged_out
+from django.dispatch import receiver
 from .forms import SignUpForm, ConjugaisonForm
 from .models import Player, IrregularVerb
+import threading
 
 # Create your views here.
 def sign_up(request):
@@ -49,6 +52,14 @@ def play(request):
     # Get a random verb
     irregular_verb = IrregularVerb.objects.order_by('?').first()
 
+    # Timer
+    def end_timer():
+        return redirect('end', result={'irregular_verb': irregular_verb})
+
+    time_limit = 60
+    timer = threading.Timer(time_limit, end_timer)
+    timer.start()
+
     # Check if user has already played this verb
     if Player.objects.filter(user=request.user, irregular_verb=irregular_verb).exists():
       messages.warning(request, "Vous avez déjà conjugué ce verbe.")
@@ -58,6 +69,13 @@ def play(request):
 
     # Check if form is valid
     return render(request, 'english_verbs/jeu.html', {'irregular_verb': irregular_verb, 'form': form})
+
+@receiver(user_logged_out)
+def cancel_timer(sender, request, **kwargs):
+    # Cancel timer
+    if 'timer' in request.session:
+       request.session['timer'].cancel()
+       del request.session['timer']
 
 def end(request, result):
     # Check if user is authenticated

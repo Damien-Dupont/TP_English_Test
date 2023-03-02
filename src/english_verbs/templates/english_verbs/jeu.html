@@ -20,18 +20,20 @@
             <form method="post" action="jeu" class="center">
                 <table>
                     <tr>
-                        <td colspan="3" style="text-align: center">Question 1 : Le verbe demeurer {{ verbe_fr }}</td>
+                        <td colspan="3" style="text-align: center">Question 1 : Le verbe demeurer {{ verbe_fr }} {{irregularVerb.traduction}}</td>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            abide {{ $verbe_en->verbe_en }} 
+                            abide {{ $verbe_en->verbe_en }} {{ irregularVerb.infinitif }}
                         </td>
                         <td><input name="preterit" type="text" /></td>
                         <td><input name="participe_passe" type="text" /></td>
                     </tr>
                     <tr>
                         <td colspan="3" style="text-align: center">
+                            {% csrf_token %}
+                            {{ form.as_p }}
                             <input type="submit" value="Envoyer" />
                         </td>
                     </tr>
@@ -40,7 +42,7 @@
         </div>
     </div>
     <footer class="center" id="footer">
-        Blog réalisé par {{ author}}
+        Jeu réalisé par {{ Olena, Oussema & Damien }}
     </footer>
 </body>
 
