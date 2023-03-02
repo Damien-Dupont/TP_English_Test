@@ -17,7 +17,7 @@ def sign_up(request):
             return redirect('index')
     else:
         form = SignUpForm()
-    return render(request, 'english_verbs/signUp.html', {'form': form})
+    return render(request, 'english_verbs/inscription.html', {'form': form})
 
 def log_in(request):
     if request.method == 'POST':
@@ -28,9 +28,9 @@ def log_in(request):
             login(request, user)
             return redirect('game')
         else:
-            return render(request, 'english_verbs/logIn.html', {'error': 'Invalid username or password.'})
+            return render(request, 'english_verbs/inscription.html', {'error': 'Invalid username or password.'})
     else:
-        return render(request, 'english_verbs/logIn.html')
+        return render(request, 'english_verbs/inscription.html')
 
 @login_required
 def log_out(request):
@@ -39,28 +39,36 @@ def log_out(request):
 
 @login_required
 def game(request):
-    return render(request, 'english_verbs/game.html')
+    return render(request, 'english_verbs/jeu.html')
 
 def play(request):
+    # Check if user is authenticated
     if not request.user.is_authenticated:
         return redirect('login')
-    
+
+    # Get a random verb
     irregular_verb = IrregularVerb.objects.order_by('?').first()
 
-    if Player.objects.filter(email=request.user, irregular_verb=irregular_verb).exists():
+    # Check if user has already played this verb
+    if Player.objects.filter(user=request.user, irregular_verb=irregular_verb).exists():
       messages.warning(request, "Vous avez déjà conjugué ce verbe.")
 
+    # form init
     form = ConjugaisonForm()
 
-    return render(request, 'english_verbs/play.html', {'irregular_verb': irregular_verb, 'form': form})
+    # Check if form is valid
+    return render(request, 'english_verbs/jeu.html', {'irregular_verb': irregular_verb, 'form': form})
 
 def end(request, result):
+    # Check if user is authenticated
     if not request.user.is_authenticated:
         return redirect('login')
 
+    # Save result
     player = Player.objects.get(user=request.user, irregular_verb=result['irregular_verb'])
     player.results = result['results']
     player.date_played = timezone.now()
     player.save()
 
-    return render(request, 'english_verbs/end.html', {'result': result})
+    # Display result
+    return render(request, 'english_verbs/fin.html', {'result': result})
