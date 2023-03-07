@@ -19,5 +19,5 @@ virtualenv/
 # Windows
 Thumbs.db
 
-src/EnglishTest_old
+EnglishTest_old
 *.mht
