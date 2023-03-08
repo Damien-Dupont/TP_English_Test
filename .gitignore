@@ -21,3 +21,6 @@ Thumbs.db
 
 EnglishTest_old
 *.mht
+__pycache__/
+__init__.py
+src/
