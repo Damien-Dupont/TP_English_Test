@@ -4,7 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.contrib import messages
 from .forms import SignUpForm, ConjugaisonForm
-from .models import Player, IrregularVerb
+from .models import Player, Verb
+import random 
 
 # Create your views here.
 def sign_up(request):
@@ -41,13 +42,32 @@ def log_out(request):
 def game(request):
     return render(request, 'english_verbs/jeu.html')
 
+ 
+
+def show_random_verb(request):
+    if request.method == 'POST':
+        user_answer = request.POST.get('answer')
+        if user_answer == request.session['verb'].participe_passe:
+            return redirect('correct_answer')
+        else:
+            return redirect('wrong_answer')
+
+    verbs = Verb.objects.all()
+    random_verb = random.choice(verbs)
+    request.session['verb'] = random_verb
+    traduction = random_verb.traduction
+    participe_passe = random_verb.participe_passe
+    return render(request, 'verb.html', {'verb': random_verb, 'translation': traduction, 'past_time_form': participe_passe})
+
+
+
 def play(request):
     # Check if user is authenticated
     if not request.user.is_authenticated:
         return redirect('login')
 
     # Get a random verb
-    irregular_verb = IrregularVerb.objects.order_by('?').first()
+    irregular_verb = Verb.objects.order_by('?').first()
 
     # Check if user has already played this verb
     if Player.objects.filter(user=request.user, irregular_verb=irregular_verb).exists():
