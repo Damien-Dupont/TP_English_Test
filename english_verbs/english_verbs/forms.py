@@ -12,5 +12,5 @@ class SignUpForm(forms.ModelForm):
 class ConjugaisonForm(forms.Form):
     preterit = forms.CharField(max_length=50, label="preterit")
     participe_passe = forms.CharField(max_length=50, label="participe_passe")
-    infinitif = forms.CharField(max_length=50, label="base_verbale")
+    base_verbale = forms.CharField(max_length=50, label="base_verbale")
     traduction = forms.CharField(max_length=50, label="traduction")
