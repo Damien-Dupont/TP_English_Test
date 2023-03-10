@@ -1,5 +1,5 @@
 from django.contrib import admin
-from src.english_verbs.models import Town, Player, Game, Verb, Question
+from english_verbs.models import Town, Player, Game, Verb, Question
 
 # Register your models here.
 

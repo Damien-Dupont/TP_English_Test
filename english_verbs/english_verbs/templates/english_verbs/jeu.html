@@ -13,42 +13,26 @@
     <div class="container">
         <div class="textcenter">
 
-            <h1 class="pagetitle">English Test Nicolas, meilleur score:
-                90 verbes
-            </h1>
+            <h1 class="pagetitle">English Test Nicolas, meilleur score : 90 verbes</h1>
             <br />
             <a href="/deconnexion">Déconnexion</a>
             <br />
-            <form method="get" action="jeu" class="center">
+            <form method="post" action="jeu" class="center">
                 <table>
                     <tr>
-                        <td colspan="3" style="text-align: center">
-                            <h2>GAME OVER</h2>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" style="text-align: center">Question 10 : Le verbe souffler
+                        <td colspan="3" style="text-align: center">Question 1 : Le verbe {{ Verb.traduction }}</td>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            blow
+                            {{ Verb.base_verbale }}
                         </td>
-                        <td>
-                            <span>blown</span>
-                        </td>
-                        <td>
-                            <span>blew</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="3">
-                            Votre score est de 10
-                        </td>
+                        <td><input name="preterit" type="text" /></td>
+                        <td><input name="participe_passe" type="text" /></td>
                     </tr>
                     <tr>
                         <td colspan="3" style="text-align: center">
-                            <input type="submit" value="Recommencer" />
+                            <input type="submit" value="Envoyer" />
                         </td>
                     </tr>
                 </table>
@@ -56,7 +40,7 @@
         </div>
     </div>
     <footer class="center" id="footer">
-        Blog réalisé par
+        Blog réalisé par Alena, Oussema, Damien
     </footer>
 </body>
 

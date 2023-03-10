@@ -1,25 +1,25 @@
- 
 <h1>{{ verb.infinitive }}</h1>
 <p>Translation: {{ translation }}</p>
 <form method="post">
   {% csrf_token %}
-  <p>Past time form: <input type="text" name="answer"></p>
+  <p>Past time form: <input type="text" name="answer" /></p>
   <p id="timer">01:00</p>
   <button type="submit">Submit</button>
 </form>
 
 <script>
   var time_left = 60; // in seconds
-  var timer = setInterval(function() {
+  var timer = setInterval(function () {
     var minutes = Math.floor(time_left / 60);
     var seconds = time_left % 60;
-    document.getElementById("timer").innerHTML = ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2);
+    document.getElementById("timer").innerHTML =
+      ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2);
     time_left--;
     if (time_left < 0) {
       clearInterval(timer);
       document.getElementById("timer").innerHTML = "Time's up!";
       document.querySelector("form button").setAttribute("disabled", true);
-      setTimeout(function() {
+      setTimeout(function () {
         document.querySelector("form").submit();
       }, 2000);
     }

@@ -4,10 +4,11 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.contrib import messages
 from .forms import SignUpForm, ConjugaisonForm
-from .models import Player, Verb
-import random 
+from .models import Player, Verb, Town
 
 # Create your views here.
+
+
 def sign_up(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -17,8 +18,10 @@ def sign_up(request):
             player.save()
             return redirect('index')
     else:
+        towns = Town.objects.all()
         form = SignUpForm()
-    return render(request, 'english_verbs/inscription.html', {'form': form})
+    return render(request, 'english_verbs/inscription.html', {'form': form, 'towns': towns})
+
 
 def log_in(request):
     if request.method == 'POST':
@@ -33,32 +36,16 @@ def log_in(request):
     else:
         return render(request, 'english_verbs/inscription.html')
 
+
 @login_required
 def log_out(request):
     logout(request)
     return redirect('index')
 
+
 @login_required
 def game(request):
     return render(request, 'english_verbs/jeu.html')
-
- 
-
-def show_random_verb(request):
-    if request.method == 'POST':
-        user_answer = request.POST.get('answer')
-        if user_answer == request.session['verb'].participe_passe:
-            return redirect('correct_answer')
-        else:
-            return redirect('wrong_answer')
-
-    verbs = Verb.objects.all()
-    random_verb = random.choice(verbs)
-    request.session['verb'] = random_verb
-    traduction = random_verb.traduction
-    participe_passe = random_verb.participe_passe
-    return render(request, 'verb.html', {'verb': random_verb, 'translation': traduction, 'past_time_form': participe_passe})
-
 
 
 def play(request):
@@ -71,7 +58,7 @@ def play(request):
 
     # Check if user has already played this verb
     if Player.objects.filter(user=request.user, irregular_verb=irregular_verb).exists():
-      messages.warning(request, "Vous avez déjà conjugué ce verbe.")
+        messages.warning(request, "Vous avez déjà conjugué ce verbe.")
 
     # form init
     form = ConjugaisonForm()
@@ -79,13 +66,15 @@ def play(request):
     # Check if form is valid
     return render(request, 'english_verbs/jeu.html', {'irregular_verb': irregular_verb, 'form': form})
 
+
 def end(request, result):
     # Check if user is authenticated
     if not request.user.is_authenticated:
         return redirect('login')
 
     # Save result
-    player = Player.objects.get(user=request.user, irregular_verb=result['irregular_verb'])
+    player = Player.objects.get(
+        user=request.user, irregular_verb=result['irregular_verb'])
     player.results = result['results']
     player.date_played = timezone.now()
     player.save()
