@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.contrib import messages
 from .forms import SignUpForm, ConjugaisonForm
-from .models import Player, IrregularVerb
+from .models import Player, Verb, Town
 
 # Create your views here.
 
@@ -18,8 +18,9 @@ def sign_up(request):
             player.save()
             return redirect('index')
     else:
+        towns = Town.objects.all()
         form = SignUpForm()
-    return render(request, 'english_verbs/inscription.html', {'form': form})
+    return render(request, 'english_verbs/inscription.html', {'form': form, 'towns': towns})
 
 
 def log_in(request):
@@ -53,7 +54,7 @@ def play(request):
         return redirect('login')
 
     # Get a random verb
-    irregular_verb = IrregularVerb.objects.order_by('?').first()
+    irregular_verb = Verb.objects.order_by('?').first()
 
     # Check if user has already played this verb
     if Player.objects.filter(user=request.user, irregular_verb=irregular_verb).exists():
