@@ -13,20 +13,9 @@ def sign_up(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-
-            email = form.cleaned_data['email']
-            lastname = form.cleaned_data['lastname']
-            firstname = form.cleaned_data['firstname']
-            password = form.cleaned_data['password']
-            idTown = form.cleaned_data['idTown']
-            joined_date = timezone.now()
-
-            # player = form.save(commit=False)
-            # player.joined_date = timezone.now()
-            player = Player(email=email, lastname=lastname, firstname=firstname,
-                            password=password, idTown=idTown, joined_date=joined_date)
+            player = form.save(commit=False)
+            player.joined_date = timezone.now()
             player.save()
-
             return redirect('index')
     else:
         form = SignUpForm()

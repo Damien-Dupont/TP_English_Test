@@ -26,4 +26,5 @@ urlpatterns = [
     path('play/', views.play, name='play'),
     path('end/', views.end, name='end'),
     path('admin/', admin.site.urls),
+    path('random_verb/', views.verbs, name='verbs'),
 ]
