@@ -18,13 +18,15 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('', views.sign_up, name='index'),
-    path('inscription/', views.sign_up, name='signup'),
-    path('login/', views.log_in, name='login'),
+    path('index/', views.index, name='index'),
+    # path('inscription/', views.sign_up, name='signup'),
+    path('inscription/', views.log_in, name='inscription'),
     path('logout/', views.log_out, name='logout'),
     path('game/', views.game, name='game'),
     path('play/', views.play, name='play'),
     path('end/', views.end, name='end'),
-    path('random_verb/', views.Verb, name='Verb'),
+    path('verbs/', views.verbs, name='Verb'),
     path('admin/', admin.site.urls),
+    path('verbs/', views.verbs, name='verbs'),
 ]
+
