@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.contrib import messages
+from django.http import HttpResponseRedirect
 from . forms import SignUpForm, ConjugaisonForm
 from . models import Player, Verb, Town
 
@@ -31,15 +32,17 @@ def sign_up(request):
 
 def log_in(request):
     if request.method == 'POST':
-        email = request.POST.get['email']
-        password = request.POST.get['password']
+        user = Player()
+        user.email = request.POST.get['email']
+        user.password = request.POST.get['password']
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
             return render(request, 'english_verbs/play.html')
         else:
             return render(request, 'english_verbs/inscription.html', {'error': 'Invalid username or password.'})
-     
+    user.save()
+    return HttpResponseRedirect("/")
 
 @login_required
 def log_out(request):
