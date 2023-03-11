@@ -3,10 +3,16 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.contrib import messages
-from .forms import SignUpForm, ConjugaisonForm
-from .models import Player, Verb, Town
+from . forms import SignUpForm, ConjugaisonForm
+from . models import Player, Verb, Town
 
 # Create your views here.
+def index(request):
+    return render(request, 'english_verbs/index.html')
+
+
+def verbs(request):
+    return render(request, 'english_verbs/verbs.html')
 
 
 def sign_up(request):
@@ -16,61 +22,58 @@ def sign_up(request):
             player = form.save(commit=False)
             player.joined_date = timezone.now()
             player.save()
-            return redirect('index')
-    else:
-        towns = Town.objects.all()
-        form = SignUpForm()
-    return render(request, 'english_verbs/inscription.html', {'form': form, 'towns': towns})
+            return redirect('english_verbs/play.html')
+        else:
+            towns = Town.objects.all()
+            form = SignUpForm()
+        return render(request, 'english_verbs/index.html', {'form': form, 'towns': towns})
 
 
 def log_in(request):
     if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
+        email = request.POST.get['email']
+        password = request.POST.get['password']
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            return redirect('game')
+            return render(request, 'english_verbs/play.html')
         else:
             return render(request, 'english_verbs/inscription.html', {'error': 'Invalid username or password.'})
-    else:
-        return render(request, 'english_verbs/inscription.html')
-
+     
 
 @login_required
 def log_out(request):
     logout(request)
-    return redirect('index')
-
+    return render(request, 'english_verbs/play.html')
 
 @login_required
 def game(request):
-    return render(request, 'english_verbs/jeu.html')
+    return render(request, 'english_verbs/play.html')
 
 
 def play(request):
     # Check if user is authenticated
-    if not request.user.is_authenticated:
-        return redirect('login')
+    # if not request.user.is_authenticated:
+        # return redirect('login')
 
     # Get a random verb
-    irregular_verb = Verb.objects.order_by('?').first()
+    base_verbale = Verb.objects.order_by('?').first()
 
     # Check if user has already played this verb
-    if Player.objects.filter(user=request.user, irregular_verb=irregular_verb).exists():
+    if Player.objects.filter(user=request.user, base_verbale=base_verbale).exists():
         messages.warning(request, "Vous avez déjà conjugué ce verbe.")
 
     # form init
     form = ConjugaisonForm()
 
     # Check if form is valid
-    return render(request, 'english_verbs/jeu.html', {'irregular_verb': irregular_verb, 'form': form})
+    return render(request, 'english_verbs/play.html', {'irregular_verb': base_verbale, 'form': form})
 
 
 def end(request, result):
     # Check if user is authenticated
-    if not request.user.is_authenticated:
-        return redirect('login')
+    # if not request.user.is_authenticated:
+        # return redirect('login')
 
     # Save result
     player = Player.objects.get(
